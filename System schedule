@@ -1,0 +1,41 @@
+using System;
+using System.Data.SqlClient;
+
+namespace ScheduleSystem
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Connect to the database
+            string connectionString = "Data Source=SERVERNAME;Initial Catalog=DATABASENAME;Integrated Security=True";
+            SqlConnection connection = new SqlConnection(connectionString);
+            connection.Open();
+
+            // Prompt the user for input
+            Console.WriteLine("Enter the date of the appointment (yyyy-mm-dd):");
+            string date = Console.ReadLine();
+            Console.WriteLine("Enter the start time of the appointment (hh:mm:ss):");
+            string startTime = Console.ReadLine();
+            Console.WriteLine("Enter the end time of the appointment (hh:mm:ss):");
+            string endTime = Console.ReadLine();
+            Console.WriteLine("Enter the description of the appointment:");
+            string description = Console.ReadLine();
+
+            // Insert the appointment into the database
+            string query = "INSERT INTO Appointments (Date, StartTime, EndTime, Description) VALUES (@Date, @StartTime, @EndTime, @Description)";
+            SqlCommand command = new SqlCommand(query, connection);
+            command.Parameters.AddWithValue("@Date", date);
+            command.Parameters.AddWithValue("@StartTime", startTime);
+            command.Parameters.AddWithValue("@EndTime", endTime);
+            command.Parameters.AddWithValue("@Description", description);
+            command.ExecuteNonQuery();
+
+            // Close the database connection
+            connection.Close();
+
+            // Inform the user that the appointment was successfully scheduled
+            Console.WriteLine("Appointment scheduled successfully.");
+        }
+    }
+}
